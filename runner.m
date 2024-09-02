@@ -67,7 +67,7 @@ S:=JtoK(S,rosen,K);
 //   - if N = 5, then we always run Scaling_5 (if method != 0)
 
 method := 2;
-if N neq 5 then 
+if N ne 5 then 
     "Let's run GetIsogeny with method #", method, "!\n";
 else
     "Let's run GetIsogeny with usual method for N = 5!\n";
