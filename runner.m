@@ -74,7 +74,14 @@ else
 end if;
 
 // Running GetIsogeny
+
 phi, times:= GetIsogeny(P,R, S, K, N, method : timing := true);
+
+// Optionally, you can input a choice of indices giving the basis as 
+//  phi, times:= GetIsogeny(P,R, S, K, N, method : timing := true, basis_inds := [I_1, I_2, I_3, I_4]);
+// where I_k is an array of indices corresponding to a basis for the k-th part. 
+// As Scaling_5 is specifically optimsed adapted for our choice of basis, 
+// this method will fail in this case. Therefore, if N = 5, set method := 0.
 
 "Computed the isogeny in total time ", times[4][1], "seconds.\n";
 

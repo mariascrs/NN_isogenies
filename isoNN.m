@@ -20,6 +20,47 @@ function _computeKummer(consts)
 	return ((X^4+Y^4+Z^4+T^4)+ 2*E*X*Y*Z*T - F*(X^2*T^2+Y^2*Z^2)-G*(X^2*Z^2+Y^2*T^2) - H*(X^2*Y^2+T^2*Z^2));
 end function;
 
+_biquadratics_full := function(P,Q,thetas)
+    /* 
+    Input: Points P, Q on fast Kummer surface defined by fundamental constants thetas
+    Output: The biquadratic forms evaluted at P and Q. 
+
+    This is the unoptimised function, when we need to output the biquadratic forms
+    corresponding to all indices
+    */
+
+    a,b,c,d := Explode(thetas);
+    XP:=P[1]; YP:=P[2]; ZP:=P[3]; TP:=P[4];
+    XQ:=Q[1]; YQ:=Q[2]; ZQ:=Q[3]; TQ:=Q[4];  
+    
+    B11:=(TP^2+XP^2+YP^2+ZP^2)*(TQ^2+XQ^2+YQ^2+ZQ^2)/(4*((1/2)*a^2+(1/2)*b^2+(1/2)*c^2+(1/2)*d^2))+(-TP^2+XP^2+YP^2-ZP^2)*(-TQ^2+XQ^2+YQ^2-ZQ^2)/(4*((1/2)*a^2+(1/2)*b^2-(1/2)*c^2-(1/2)*d^2))+(-TP^2+XP^2-YP^2+ZP^2)*(-TQ^2+XQ^2-YQ^2+ZQ^2)/(4*((1/2)*a^2-(1/2)*b^2+(1/2)*c^2-(1/2)*d^2))+(TP^2+XP^2-YP^2-ZP^2)*(TQ^2+XQ^2-YQ^2-ZQ^2)/(4*((1/2)*a^2-(1/2)*b^2-(1/2)*c^2+(1/2)*d^2));
+    B22:=(TP^2+XP^2+YP^2+ZP^2)*(TQ^2+XQ^2+YQ^2+ZQ^2)/(4*((1/2)*a^2+(1/2)*b^2+(1/2)*c^2+(1/2)*d^2))+(-TP^2+XP^2+YP^2-ZP^2)*(-TQ^2+XQ^2+YQ^2-ZQ^2)/(4*((1/2)*a^2+(1/2)*b^2-(1/2)*c^2-(1/2)*d^2))-(-TP^2+XP^2-YP^2+ZP^2)*(-TQ^2+XQ^2-YQ^2+ZQ^2)/(4*((1/2)*a^2-(1/2)*b^2+(1/2)*c^2-(1/2)*d^2))-(TP^2+XP^2-YP^2-ZP^2)*(TQ^2+XQ^2-YQ^2-ZQ^2)/(4*((1/2)*a^2-(1/2)*b^2-(1/2)*c^2+(1/2)*d^2));
+    B33:=(TP^2+XP^2+YP^2+ZP^2)*(TQ^2+XQ^2+YQ^2+ZQ^2)/(4*((1/2)*a^2+(1/2)*b^2+(1/2)*c^2+(1/2)*d^2))-(-TP^2+XP^2+YP^2-ZP^2)*(-TQ^2+XQ^2+YQ^2-ZQ^2)/(4*((1/2)*a^2+(1/2)*b^2-(1/2)*c^2-(1/2)*d^2))+(-TP^2+XP^2-YP^2+ZP^2)*(-TQ^2+XQ^2-YQ^2+ZQ^2)/(4*((1/2)*a^2-(1/2)*b^2+(1/2)*c^2-(1/2)*d^2))-(TP^2+XP^2-YP^2-ZP^2)*(TQ^2+XQ^2-YQ^2-ZQ^2)/(4*((1/2)*a^2-(1/2)*b^2-(1/2)*c^2+(1/2)*d^2));
+    B44:=(TP^2+XP^2+YP^2+ZP^2)*(TQ^2+XQ^2+YQ^2+ZQ^2)/(4*((1/2)*a^2+(1/2)*b^2+(1/2)*c^2+(1/2)*d^2))-(-TP^2+XP^2+YP^2-ZP^2)*(-TQ^2+XQ^2+YQ^2-ZQ^2)/(4*((1/2)*a^2+(1/2)*b^2-(1/2)*c^2-(1/2)*d^2))-(-TP^2+XP^2-YP^2+ZP^2)*(-TQ^2+XQ^2-YQ^2+ZQ^2)/(4*((1/2)*a^2-(1/2)*b^2+(1/2)*c^2-(1/2)*d^2))+(TP^2+XP^2-YP^2-ZP^2)*(TQ^2+XQ^2-YQ^2-ZQ^2)/(4*((1/2)*a^2-(1/2)*b^2-(1/2)*c^2+(1/2)*d^2));
+    B12:=(2*(a*b*(TP*TQ*ZP*ZQ+XP*XQ*YP*YQ)-c*d*(TP*XQ*YQ*ZP+TQ*XP*YP*ZQ)))/(((1/2)*a^2+(1/2)*b^2+(1/2)*c^2+(1/2)*d^2)*((1/2)*a^2+(1/2)*b^2-(1/2)*c^2-(1/2)*d^2)-((1/2)*a^2-(1/2)*b^2+(1/2)*c^2-(1/2)*d^2)*((1/2)*a^2-(1/2)*b^2-(1/2)*c^2+(1/2)*d^2));
+    B13:=(2*(a*c*(TP*TQ*YP*YQ+XP*XQ*ZP*ZQ)-b*d*(TP*XQ*YP*ZQ+TQ*XP*YQ*ZP)))/(((1/2)*a^2+(1/2)*b^2+(1/2)*c^2+(1/2)*d^2)*((1/2)*a^2-(1/2)*b^2+(1/2)*c^2-(1/2)*d^2)-((1/2)*a^2+(1/2)*b^2-(1/2)*c^2-(1/2)*d^2)*((1/2)*a^2-(1/2)*b^2-(1/2)*c^2+(1/2)*d^2));
+    B14:=(2*(a*d*(TP*TQ*XP*XQ+YP*YQ*ZP*ZQ)-b*c*(TP*XP*YQ*ZQ+TQ*XQ*YP*ZP)))/(((1/2)*a^2+(1/2)*b^2+(1/2)*c^2+(1/2)*d^2)*((1/2)*a^2-(1/2)*b^2-(1/2)*c^2+(1/2)*d^2)-((1/2)*a^2+(1/2)*b^2-(1/2)*c^2-(1/2)*d^2)*((1/2)*a^2-(1/2)*b^2+(1/2)*c^2-(1/2)*d^2));
+    B23:=(2*(b*c*(TP*TQ*XP*XQ+YP*YQ*ZP*ZQ)-a*d*(TP*XP*YQ*ZQ+TQ*XQ*YP*ZP)))/(((1/2)*a^2+(1/2)*b^2-(1/2)*c^2-(1/2)*d^2)*((1/2)*a^2-(1/2)*b^2+(1/2)*c^2-(1/2)*d^2)-((1/2)*a^2+(1/2)*b^2+(1/2)*c^2+(1/2)*d^2)*((1/2)*a^2-(1/2)*b^2-(1/2)*c^2+(1/2)*d^2));
+    B24:=(2*(b*d*(TP*TQ*YP*YQ+XP*XQ*ZP*ZQ)-a*c*(TP*XQ*YP*ZQ+TQ*XP*YQ*ZP)))/(((1/2)*a^2+(1/2)*b^2-(1/2)*c^2-(1/2)*d^2)*((1/2)*a^2-(1/2)*b^2-(1/2)*c^2+(1/2)*d^2)-((1/2)*a^2+(1/2)*b^2+(1/2)*c^2+(1/2)*d^2)*((1/2)*a^2-(1/2)*b^2+(1/2)*c^2-(1/2)*d^2));
+    B34:=(2*(c*d*(TP*TQ*ZP*ZQ+XP*XQ*YP*YQ)-a*b*(TP*XQ*YQ*ZP+TQ*XP*YP*ZQ)))/(((1/2)*a^2-(1/2)*b^2+(1/2)*c^2-(1/2)*d^2)*((1/2)*a^2-(1/2)*b^2-(1/2)*c^2+(1/2)*d^2)-((1/2)*a^2+(1/2)*b^2+(1/2)*c^2+(1/2)*d^2)*((1/2)*a^2+(1/2)*b^2-(1/2)*c^2-(1/2)*d^2));
+    
+    B21:=B12;
+    B31:=B13;
+    B41:=B14;
+    B32:=B23;
+    B42:=B24;
+    B43:=B34;
+    
+    B:=[
+        [B11,B12,B13,B14],
+        [B21,B22,B23,B24],
+        [B31,B32,B33,B34],
+        [B41,B42,B43,B44]
+       ];
+
+    return B;
+end function;
+
 _biquadratics:=function(P,Q,thetas)
     /* 
     Input: Points P, Q on fast Kummer surface defined by fundamental constants thetas
@@ -27,7 +68,7 @@ _biquadratics:=function(P,Q,thetas)
 
             Note that here we only ouput the biquadratic forms with indices in 
                         \{(1,1), (2,2) (1,2), (2,1), (3,3), (4,4), (3,4), (4,3)\} 
-            as this will be sufficient for our application.
+            as this will be sufficient for our application (when using the basis from Conjecture 5.2).
             We optimise the formulae so that they are inversion-less and minimise the number of multiplications performed.
             
             TOTAL COST: 12S + 39M + 43a
@@ -232,16 +273,16 @@ _invariantForm := function(P, R, B, RN, BN, inds, N)
     result := 0;
 
     orbit := _findOrbit(inds);
-
     for I in orbit do 
         g := _computeForm(P, R, B, RN, BN, I[1], N);
         result +:= I[2][1]*g;
-    end for; 
+    end for;  
+
     return result;
 end function;
 
 
-FindBasis := function(P, R, B, RN, BN, N)
+FindBasis := function(P, R, B, RN, BN, N, basis_inds)
     /*
     Computes the basis of forms invariant under translation by an N-torsion point
 
@@ -251,16 +292,23 @@ FindBasis := function(P, R, B, RN, BN, N)
         RN, a list of length (N-1)/2 containing the multiples of R, namely [2*R, 3*R, ..., (N-1)/2*R] 
         BN, a list of length (N-1)/2 containing the biquadratic forms evaluated at P and l*R, where l = 2, ..., (N-1)/2
         N, the order of the point R (we input this rather than computing it as this is costly)
-    
+        basis_inds, an array of the form [I1, I2, I3, I_4] where I_k is an array containing the the indices used to 
+                    construct the basis of the k-th part B^(k)_R. If basis_inds = [], we use the basis given
+                    in the paper (from Conjecture 5.4).
+
     OUTPUT: the basis of invariant forms corresponding to R. Should always be of size (2N+2)
 
     */
     
     // "Generating the invariant forms..";
-    F_ind := func< a,b,c | [a : i in [0..c-1]] cat [b : i in [c .. N-1]]>;
-    inds12 := [F_ind(1,2,i) : i in [N..0 by -1]];
-    inds34 := [F_ind(3,4,i) : i in [N..0 by -1]];
-    inds := [[ inds12[i] : i in [1..#inds12] | i mod 2 eq 1 ]] cat [[ inds12[i] : i in [1..#inds12] | i mod 2 eq 0 ]] cat [[ inds34[i] : i in [1..#inds34] | i mod 2 eq 1 ]] cat [[ inds34[i] : i in [1..#inds34] | i mod 2 eq 0 ]];
+    if #basis_inds eq 0 then 
+        F_ind := func< a,b,c | [a : i in [0..c-1]] cat [b : i in [c .. N-1]]>;
+        inds12 := [F_ind(1,2,i) : i in [N..0 by -1]];
+        inds34 := [F_ind(3,4,i) : i in [N..0 by -1]];
+        inds := [[ inds12[i] : i in [1..#inds12] | i mod 2 eq 1 ]] cat [[ inds12[i] : i in [1..#inds12] | i mod 2 eq 0 ]] cat [[ inds34[i] : i in [1..#inds34] | i mod 2 eq 1 ]] cat [[ inds34[i] : i in [1..#inds34] | i mod 2 eq 0 ]];
+    else 
+        inds := basis_inds;
+    end if;
     // "Number of inds is:", #inds;
     inv_forms := [[_invariantForm(P, R, B, RN, BN, i, N) : i in I] : I in inds];
     // "Found all the invariant forms..";
@@ -292,7 +340,6 @@ FindIntersection:=function(XR, XS, N)
 	Sbasis := [[MonomialCoefficient(-XS[i], j) : j in monomials[1..(N+1)]] : i in [1..m]]; //can be monomials[1..N] but let's just make it sqaure as in the paper
 	RSbasis:= Rbasis cat Sbasis;
 	RSmat := Matrix(Fp2, RSbasis);
-
 	RSker := Basis(Nullspace(RSmat));
 	basis := [];
 	for i in [1..#RSker] do
@@ -321,7 +368,7 @@ end function;
 
 load "scalings.m";
 
-function GetIsogeny(P, R, S, K, N, method : timing := false)
+function GetIsogeny(P, R, S, K, N, method : timing := false, basis_inds := [])
     /*
     Computes the basis of forms invariant under translation by an N-torsion point
 
@@ -331,7 +378,9 @@ function GetIsogeny(P, R, S, K, N, method : timing := false)
            N, the order of the point R (we input this rather than computing it as this is costly)
            method, the index of the method used for scaling. If method = 0 then we do not do the final scaling (useful if wanting to use GetImage)
            (optional) timing, for benchmarking reasons. Times each of the main subroutines in the algorithm separately
-    
+           (optional) basis_inds, an array of the form [I1, I2, I3, I_4] where I_k is an array containing the indices used to 
+                                construct the basis of B^(k)_R and B^(k)_S (i.e., the k-th part of B_R and B_S). If this is not given as input, we use the indices given in the paper (from Conjecture 5.4).
+
     OUTPUT: phi, the equations for of the (N,N)-isogeny with kernel <R, S>. 
                 If method = 2 or 3, the image of phi is in correct form. 
                 If method = 0, the phi is unscaled and the image is not in the correct form
@@ -350,16 +399,24 @@ function GetIsogeny(P, R, S, K, N, method : timing := false)
     RN := [ScalarMultKummer(R, j, K) : j in [2..((N-1)/2)]];
     SN := [ScalarMultKummer(S, j, K) : j in [2..((N-1)/2)]];
 
-    BR := _biquadratics(P,R,thetas);
-    BRN := [_biquadratics(P,RN[i],thetas) : i in [1..#RN]];
-    BS := _biquadratics(P,S,thetas);
-    BSN := [_biquadratics(P,SN[i],thetas) : i in [1..#SN]];
+    if #basis_inds eq 0 then 
+        // Use our optimised function when we use the basis in Conjecture 5.2
+        BR := _biquadratics(P,R,thetas);
+        BRN := [_biquadratics(P,RN[i],thetas) : i in [1..#RN]];
+        BS := _biquadratics(P,S,thetas);
+        BSN := [_biquadratics(P,SN[i],thetas) : i in [1..#SN]];
+    else 
+        BR := _biquadratics_full(P,R,thetas);
+        BRN := [_biquadratics_full(P,RN[i],thetas) : i in [1..#RN]];
+        BS := _biquadratics_full(P,S,thetas);
+        BSN := [_biquadratics_full(P,SN[i],thetas) : i in [1..#SN]];
+    end if;
 
     if timing then 
         t := Cputime();
     end if;
-    Rbasis := FindBasis(P, R, BR, RN, BRN, N); 
-    Sbasis := FindBasis(P, S, BS, SN, BSN, N); 
+    Rbasis := FindBasis(P, R, BR, RN, BRN, N, basis_inds);
+    Sbasis := FindBasis(P, S, BS, SN, BSN, N, basis_inds); 
     if timing then 
         Append(~times[1], Cputime(t));
     end if;
@@ -368,7 +425,6 @@ function GetIsogeny(P, R, S, K, N, method : timing := false)
     K_eqn:=_computeKummer(K[1]);
     Rset := [ [quotient(r, K_eqn) : r in RR] : RR in Rbasis];
     Sset := [ [quotient(s, K_eqn) : s in SS] : SS in Sbasis];
-  
     if timing then 
         t := Cputime();
     end if;
@@ -381,14 +437,13 @@ function GetIsogeny(P, R, S, K, N, method : timing := false)
         Append(~times[2], Cputime(t));
     end if;
     
-
     phi := [phi1, phi2, phi3, phi4];
 
     if method eq 0 then
         // Here we return the isogeny with no final scaling 
         // The unscaled isogeny can then be used in GetImage 
-        // Ṭo obtain the equation for the image Kummer
-        // ẉith no sqrts or linear algebra
+        // To obtain the equation for the image Kummer
+        // with no sqrts or linear algebra
         if timing then 
             Append(~times[4], Cputime(t1));
             return phi, times;
