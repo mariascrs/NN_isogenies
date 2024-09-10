@@ -34,7 +34,7 @@ Load `benchmarks.m` in terminal and run
 primes_logp100 := [2^4*3^58*5*29-1, 2^4*3^62*7-1, 2^4*3^55*11-1, 2^4*3^57*13-1, 2^4*3^54*17-1, 2^4*3^61*19-1];
 benchmark_fig2(100, 50, 50 : Ns := [5, 7, 11, 13, 17, 19] , primes := primes_logp100);
 ```
-Here, `primes_logp100` is a list of primes that we have generated for our benchmarks, and `Ns` is a list of odd prime $N$ that we benchmark. The $i$-th entry of the array correspends to the $i$-th $N$, and the prime is chosen so that we have $\mathbb{F}_{p^2}$-rational $N$-torsion. 
+Here, `primes_logp100` is a list of primes that we have generated for our benchmarks, and `Ns` is a list of odd prime $N$ that we benchmark. The $i$-th prime in the array correspends to the $i$-th $N$, and the prime is chosen so that we have $\mathbb{F}_{p^2}$-rational $N$-torsion. 
 
 ### Table 1 
 Load `benchmarks.m` in terminal and run 
