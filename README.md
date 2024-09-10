@@ -16,7 +16,7 @@ This directory contains the following files:
     - Method 1: Finding the scaling for $N = 5$, given by `Scaling_5()`.
     - Method 2: Finding the scaling using Gaussian elimination for $N \geq 7$, given by `Scaling_GE()`.
     - Method 3: Finding the scaling by computing 2 square roots for $N \geq 7$, given by `Scaling_sqrt()`.
-
+- MapleFiles: This folder contains Maple files used to obtain the re-derivation of the fast Kummer surface, as well as develop the algorithms that are optimised in the Magma files. 
 
 # Reproducing benchmarks
 
