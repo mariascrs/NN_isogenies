@@ -16,10 +16,11 @@ N:=5;
 p := 4;
 repeat
     repeat 
-        e := Random([20..100]);
+        e := Random([50..120]);
         p:=2^4*3^e*N-1;
     until IsPrime(p);
 until (Floor(Log(2,p)) in [80..120]);
+
 
 load "functions.m";
 
@@ -32,8 +33,10 @@ _<x>:=PolynomialRing(Fp2);
 
 // Set up a Fast Kummer surface defined over Fp2
 C:=HyperellipticCurve(x^6+1);
-C:=random_walk(C);
-K,rosen:=KummerFromCurve(C);
+repeat
+    C:=random_walk(C);
+    K,rosen:=KummerFromCurve(C);
+until &*K[1] ne 0;
 C:=HyperellipticCurve(x*(x-1)*(x-rosen[1])*(x-rosen[2])*(x-rosen[3]));
 J:=Jacobian(C);
 
@@ -87,13 +90,26 @@ phi, times:= GetIsogeny(P,R, S, K, N, method : timing := true);
 
 // Checking the isogeny has the correct image
 "Checking the isogeny...";
-for i in [1..50] do 
-    image_thetas := Evaluate(phi, K[2]);
+image_thetas := Evaluate(phi, K[2]);
+
+// Checking if its a valid image
+try 
     image_kummer := KummerFromThetas(image_thetas);
+catch e
+    print "";
+    error "Error in forming the image Kummer surface; likely a product of elliptic curves.";
+end try;
+if &*image_kummer[2] eq 0 then 
+    error "Image thetas have zero entries; likely a product of elliptic curves.";
+end if;
 
+// Checking if point map through the isogeny correctly.
+for i in [1..50] do 
     image_P := Evaluate(phi, RandomKummerPoint(K));
+    if not OnKummer(image_P, image_kummer) then 
+        error "There is some error with the isogeny; likely a product of elliptic curves.";
+    end if;
 
-    assert OnKummer(image_P, image_kummer);
 end for;
 
 "Isogeny has correct image (with overwhelming probability).\n";
@@ -110,4 +126,3 @@ Kim, t2 := GetImage(phi, K : timing:=true);
 "Checking the image...";
 assert Kim eq Parent(Kim)!_computeKummer(image_kummer[1]);
 "Image is correct!";
-

@@ -38,8 +38,10 @@ function Scaling_5(phi);
 
     cZ2T2 := cZ2*cT2;
     cY2Z1 := cY2*cZ1;
+
+    scals := [cY2*cZ2T2, cY1*cZ2T2, cY2Z1*cT2, cY2Z1*cT1];
     
-    return FourWayMult(phi, [cY2*cZ2T2, cY1*cZ2T2, cY2Z1*cT2, cY2Z1*cT1]); 
+    return FourWayMult(phi, scals); 
 
 end function;
 
@@ -160,9 +162,21 @@ function _get_isogeny(phi, scals)
     T := poly.4;
 
     lYX2, lTZ2, lZY2, lXZlYT, b2a2, d2c2, c2b2, acbd := Explode(scals);
+
+    try 
+        s1 := Sqrt(Fp2!lYX2);
+    catch e 
+        print "Error in Scaling_sqrt as there is no square root over Fp2";
+        error "Likely landing on a product of elliptic curves";
+    end try;
+    try 
+        s2 := Sqrt(Fp2!lZY2);
+    catch e 
+        print "Error in Scaling_sqrt as there is no square root over Fp2";
+        error "Likely landing on a product of elliptic curves";
+    end try;
     
-    s1 := Sqrt(Fp2!lYX2);
-    s2 := Sqrt(Fp2!lZY2);
+    
     lYXs := [s1, -s1];
     lZYs := [s2, -s2];
     

@@ -477,6 +477,7 @@ function benchmark_getimage(logp, delta, num_samples : Ns := [7,11,13,17,19], pr
         P := [X,Y,Z,T];
 
         times := [];
+        errors := 0; // counting number of errors we run into 
         for i in [1..num_samples] do
             repeat
                 repeat
@@ -492,13 +493,29 @@ function benchmark_getimage(logp, delta, num_samples : Ns := [7,11,13,17,19], pr
 
             "Sample:", i;
             phi, _ := GetIsogeny(P, R, S, K, N, method : timing := true);
-            _, t := GetImage(phi, K : timing:=true);
-            Append(~times, t);
 
-            "Average:", &+times/i, ".\n";
+            // Checking if GetImage will work (i.e., not landing on a product of ECs)
+            image_thetas := Evaluate(phi, K[2]);
+            try 
+                image_kummer := KummerFromThetas(image_thetas);
+                if &*image_kummer[2] ne 0 then 
+                    _, t := GetImage(phi, K : timing:=true);
+                    Append(~times, t);
+                else 
+                    print "Just ran into an errors: the image is likely a product of elliptic curves. Let's skip this sample.";
+                    errors +:= 1;
+                end if;
+            catch e
+                print "Just ran into an errors: the image is likely a product of elliptic curves. Let's skip this sample.";
+                errors +:= 1;
+            end try;
+
+        
+            "Average:", &+times/(i-errors), ".\n";
         end for;
 
-        av_time := &+times/num_samples;
+        av_time := &+times/(num_samples-errors);
+        errors;
         "Average:", av_time, ".\n";
         Append(~av_times, av_time);
     end for;
