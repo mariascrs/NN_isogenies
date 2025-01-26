@@ -1,6 +1,6 @@
 # Isogenies on Kummer Surfaces
 
-This repository contains the code which is attached to *Isogenies on Kummer Surfaces* by [Maria Corte-Real Santos](https://www.mariascrs.com/) and [E. Victor Flynn](https://people.maths.ox.ac.uk/flynn/). All of the code in this repository was written in [`Magma`](http://magma.maths.usyd.edu.au/magma/), except for the files in the folder 'MapleFiles', which are written in [Maple](https://www.maplesoft.com/).
+This repository contains the code which is attached to [*Isogenies on Kummer Surfaces*](https://arxiv.org/abs/2409.14819) by [Maria Corte-Real Santos](https://www.mariascrs.com/) and [E. Victor Flynn](https://people.maths.ox.ac.uk/flynn/). All of the code in this repository was written in [`Magma`](http://magma.maths.usyd.edu.au/magma/), except for the files in the folder 'MapleFiles', which are written in [Maple](https://www.maplesoft.com/).
 
 # Organisation
 
