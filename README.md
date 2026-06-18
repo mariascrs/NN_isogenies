@@ -2,6 +2,25 @@
 
 This repository contains the code which is attached to [*Isogenies on Kummer Surfaces*](https://arxiv.org/abs/2409.14819) by [Maria Corte-Real Santos](https://www.mariascrs.com/) and [E. Victor Flynn](https://people.maths.ox.ac.uk/flynn/). All of the code in this repository was written in [`Magma`](http://magma.maths.usyd.edu.au/magma/), except for the files in the folder 'MapleFiles', which are written in [Maple](https://www.maplesoft.com/).
 
+This work was published at Mathematics of Computation. Please consider citing our work if you use or build upon the results in this repository.
+
+<details>
+<summary>BibTex</summary>
+<br>
+
+```
+@article{corterealsantos_flynn_isogenies_2025,
+  title={Isogenies on Kummer surfaces},
+  author={Corte-Real Santos, Maria and Flynn, E. Victor},
+  journal={Mathematics of Computation},
+  volume={94},
+  number={355},
+  pages={2575--2612},
+  year={2025}
+```
+</details>
+
+
 # Organisation
 
 This directory contains the following files:
